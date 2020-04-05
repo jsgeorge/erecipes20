@@ -1,0 +1,292 @@
+body {
+  background: #eee;
+}
+.container {
+  min-width: 200px;
+}
+.nav {
+  border-bottom: 1px solid #ccc;
+}
+a:link,
+a:hover {
+  text-decoration: none;
+}
+.page-wrapper {
+  padding-top: 75px;
+  padding-bottom: 25px;
+}
+.form {
+  padding-top: 5px;
+  padding-bottom: 15px;
+}
+.srchBtn {
+  background: #fff;
+}
+.recipeWrapper h4 {
+  font-size: 20px;
+  color: rgb(58, 58, 58);
+  margin-bottom: 20px;
+}
+.recipeWrapper h4 a {
+  color: rgb(58, 58, 58);
+}
+.recipeWrapper h4 a:hover {
+  text-decoration: none;
+}
+.selCategory {
+  margin-bottom: 5px;
+}
+.categoryCaption {
+  position: absolute;
+  top: 35%;
+
+  left: 0;
+  z-index: 99;
+  color: #111;
+  cursor: pointer;
+  background: transparent;
+  padding: 1px 5px;
+  width: 100%;
+}
+.categoryCaption h3 {
+  text-align: center;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  font-weight: bold;
+}
+.imgCategory img {
+  height: 140px;
+  cursor: pointer;
+}
+.recipeItem .card-body h6 {
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+}
+.recipeDetail {
+  background: #fff;
+  padding: 10px;
+}
+.has-error {
+  color: red;
+}
+footer {
+  text-align: center;
+  background: #fff;
+
+  padding-top: 20px;
+  padding-bottom: 20%;
+}
+.card-title {
+  font-size: 18px;
+}
+.detailSection {
+  padding-top: 50px;
+}
+.recipeHeader {
+  width: 100%;
+  padding: 5px 10px;
+  color: #111;
+  min-height: 40px;
+
+  display: block;
+  margin-bottom: 15px;
+}
+.recipeHeader a {
+  color: #111;
+  font-size: 18px;
+}
+/* @media (max-width: 500px) {
+  .recipeItem {
+    width: 100%;
+  }
+} */
+i {
+  margin-right: 5px;
+}
+.recipeWrapper h5 {
+  margin-bottom: 25px;
+}
+a {
+  margin-right: 5px;
+}
+.form-wrapper {
+  background: #fff;
+  padding: 25px;
+}
+.form input {
+  background: #ccc;
+}
+.userPanel {
+  background: #fff;
+  padding: 20px;
+}
+.desktop {
+  display: block;
+}
+.mobile {
+  display: none;
+}
+@media (min-width: 771px) and (max-width: 992px) {
+  .container {
+    max-width: 900px;
+  }
+  .desktop {
+    display: block;
+  }
+  .mobile {
+    display: none;
+  }
+}
+@media (min-width: 572px) and (max-width: 770px) {
+  .container {
+    max-width: 700px;
+  }
+  .row {
+    margin: 0;
+  }
+  .CategoryLinks {
+    margin: 0;
+    padding: 0;
+  }
+  .selCategory {
+    width: 33%;
+  }
+  .categoryCaption {
+    top: 35%;
+  }
+  .categoryCaption h3 {
+    font-size: 19px;
+    font-weight: bold;
+  }
+
+  .recipeItem {
+    width: 50%;
+  }
+  .desktop {
+    display: block;
+  }
+  .mobile {
+    display: none;
+  }
+}
+@media (max-width: 570px) {
+  .desktop {
+    display: none;
+  }
+  .mobile {
+    display: block;
+  }
+  .recipeHeader {
+    padding: 0;
+    height: 20px;
+  }
+  .recipeHeader h4 {
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+  }
+  .recipeItem {
+    width: 50%;
+    font-size: 16px;
+    padding: 7px;
+  }
+  .recipeItem card-img-top {
+    margin-bottom: 0px;
+  }
+  .recipeItem .card-body {
+    padding: 10px 0;
+  }
+  .detailSection {
+    padding-top: 0px;
+  }
+  .detailSection h4 {
+    background: orange;
+    padding: 4px 10px;
+  }
+  .CategoryLinks {
+  }
+  .row {
+    margin: 0;
+  }
+  .selCategory {
+    width: 33%;
+    font-size: 16px;
+    padding: 5px;
+    margin-bottom: 0px;
+  }
+  .imgCategory {
+    padding: 0;
+  }
+  .imgCategory img {
+    height: 100px;
+    width: 100%;
+    padding-bottom: 0;
+  }
+  .categoryCaption {
+    font-size: 14px;
+    padding: 0;
+    top: 35%;
+    font-weight: bold;
+  }
+  .categoryCaption h3 {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .card-title {
+    font-size: 16px;
+  }
+  .detailHeader h3 {
+    padding-top: 10px;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    font-size: 20px;
+  }
+  .detailHeader a {
+    color: red;
+  }
+  .detailHeader h5 {
+    font-size: 16px;
+  }
+
+  .detailHeader img {
+    margin-bottom: 10px;
+  }
+  footer {
+    padding-top: 20px;
+    padding-bottom: 10px;
+  }
+}
+
+@media (max-width: 300px) {
+  .desktop {
+    display: none;
+  }
+  .mobile {
+    display: block;
+  }
+  .selCategory {
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    height: 50px;
+  }
+  .categoryCaption {
+    top: 0;
+    left: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: rgb(112, 111, 111);
+    color: #111;
+
+    text-align: left;
+  }
+  .categoryCaption h3 {
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+  }
+  .recipeItem {
+    width: 100%;
+  }
+}
