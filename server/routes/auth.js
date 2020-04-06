@@ -1,5 +1,6 @@
 const User = require("../models/users");
 const router = require("express").Router();
+
 router.post("/", (req, res) => {
   const { email, password } = req.body;
   User.findOne({ email: email }, (err, user) => {
@@ -21,20 +22,20 @@ router.post("/", (req, res) => {
       // res.status(200).json({
       //   token: tokenForUser(user)
       // });
-      //   user.generateToken((err, user) => {
-      //     if (err) {
-      //       return res.status(404).json({ errors: { form: err } });
-      //     }
-      //     console.log("Login successfull");
-      //     res.status(200).json({
-      //       loginSuccess: true,
-      //       token: user.token,
-      //     });
-      // .cookie("w_auth", user.token)
-      res.status(200).json({
-        loginSuccess: true,
+      user.generateToken((err, user) => {
+        if (err) {
+          return res.status(404).json({ errors: { form: err } });
+        }
+        console.log("Login successfull");
+        res.status(200).json({
+          loginSuccess: true,
+          token: user.token,
+        });
+        // .cookie("w_auth", user.token)
+        // res.status(200).json({
+        //   loginSuccess: true,
+        // });
       });
-      //});
     });
   });
 });

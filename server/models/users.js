@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 //const jwt = require("jwt-simple");
 const jwt = require("jsonwebtoken");
 const SALT_I = 10;
-//const config = require("../config");
+const config = require("../config");
 
 const userSchema = mongoose.Schema({
   email: {
@@ -50,6 +50,30 @@ userSchema.methods.comparePassword = function (candidatePassword, cb) {
     console.log(candidatePassword, isMatch);
     if (err) return cb(err);
     cb(null, isMatch);
+  });
+};
+
+userSchema.methods.generateToken = function (cb) {
+  var user = this;
+
+  const expiresIn = 24 * 60 * 60;
+
+  //var token = jwt.sign(user._id.toHexString(), SECRET_KEY);
+  var token = jwt.sign(
+    {
+      id: user.id,
+      username: user.username,
+    },
+    config.secret
+  );
+  user.token = token;
+  User.update({ _id: user._id }, user, function (
+    err,
+    numberAffected,
+    rawResponse
+  ) {
+    if (err) return cb(err);
+    cb(null, user);
   });
 };
 const User = mongoose.model("User", userSchema);

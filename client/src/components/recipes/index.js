@@ -126,7 +126,7 @@ const RecipesPage = ({ match }) => {
   };
 
   const renderCategoryLinks = () => (
-    <div class="row">
+    <div className="row">
       {categoryLink(
         "https://www.edamam.com/web-img/98a/98aa5d5cc0d88b28c2b9221a099b1a14.jpg",
         "Beef"
@@ -204,9 +204,7 @@ const RecipesPage = ({ match }) => {
       {/* <p>
         srchTerm:{srchTerm} showRecipes:{showRecipes} errors:{errors}
       </p> */}
-      <div className="CategoryLinks desktop">
-        {renderCategoryLinks()}
-      </div>
+      <div className="CategoryLinks desktop">{renderCategoryLinks()}</div>
       <div className="CategoryLinks mobile">
         {showCategories ? renderCategoryLinks() : null}
       </div>

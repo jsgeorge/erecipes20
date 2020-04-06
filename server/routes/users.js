@@ -1,16 +1,20 @@
 const User = require("../models/users");
 const router = require("express").Router();
-const uid = "5e87a4aeec5ce0255c8c4b98";
+//const uid = "5e87a4aeec5ce0255c8c4b98";
 const mongoose = require("mongoose");
 
 router.get("/id", (req, res) => {
-  User.find({ _id: mongoose.Types.ObjectId(uid) })
-    .exec((err, docs) => {
+  const uid = "";
+  if (uid) {
+    User.find({ _id: mongoose.Types.ObjectId(uid) }).exec((err, docs) => {
       if (err) {
         console.log("error", err);
       }
       return res.status(200).json(docs);
     });
+  } else {
+    return res.status(301).json({ errors: { form: "zUser is undefined" } });
+  }
 });
 router.post("/", (req, res) => {
   console.log(req.body);

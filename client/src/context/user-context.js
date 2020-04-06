@@ -1,4 +1,5 @@
 import React, { useReducer, createContext } from "react";
+import isEmpty from "lodash/isEmpty";
 
 export const UserContext = createContext();
 
@@ -42,6 +43,7 @@ function reducer(state, action) {
     case "FETCH_USER": {
       return {
         ...state,
+        isAuthenticated: !isEmpty(action.payload),
         user: action.payload,
         message: {},
       };

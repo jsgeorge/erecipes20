@@ -60,10 +60,11 @@ const RecipeDetailPage = ({ match }) => {
         recipes.map((recipe) => (
           <div className="detailWrapper">
             <div className="recipeHeader">
+            <Link to="/">categories></Link> >{" "}
+                
               {category ? (
                 <span>
-                  <Link to="/">categories></Link> >{" "}
-                  <Link to={`/${category}`}> {category}</Link> <br />
+                   <Link to={`/${category}`}> {category}</Link> <br />
                 </span>
               ) : (
                 <Link to="/user">

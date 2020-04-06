@@ -35,7 +35,7 @@ const UserPage = ({}) => {
   const { username, email, favorites } = state.user;
 
   // if (!state.user) return <div className="page-wrapper">No such user</div>;
-  if (!state.user) {
+  if (!state.user || !state.user._id) {
     return <Redirect to="/user/signin" />;
   }
   return (
