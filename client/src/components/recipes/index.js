@@ -1,9 +1,14 @@
-import React, { Component, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
 import RecipeItem from "./item";
 import { EDAMAM_APPID, EDAMAM_APPKEY } from "../constants";
+import jwtDecode from "jwt-decode";
+import axios from "axios";
+import { UserContext } from "../../context/user-context";
+import { Link, Redirect } from "react-router-dom";
+//import { sdata } from "../constants";
 
 const RecipesPage = ({ match }) => {
+  const [state, dispatch] = useContext(UserContext);
   const [recipes, setRecipes] = useState([]);
   const [header, setHeader] = useState("");
   const [srchTerm, setSrchTerm] = useState("");
@@ -12,8 +17,23 @@ const RecipesPage = ({ match }) => {
   const [errors, setErrors] = useState([]);
   const [apiError, setApiError] = useState("");
   const [showRecipes, setShowRecipes] = useState(false);
+  const [isAthenticated, setIsAuthenticated] = useState(false);
+
+  const setAuthUser = async (token) => {
+    const response = await axios.post("/users/id", { id: token.id });
+    dispatch({
+      type: "SET_USER",
+      payload: response.data,
+    });
+  };
+
   useEffect(() => {
     //getRecipes("Beef");
+    if (!state.user[0] && localStorage.jwtToken) {
+      setAuthUser(jwtDecode(localStorage.jwtToken));
+    }
+    console.log("home user", state.user[0]);
+    
     if (match.params.category) showCategory(match.params.category);
   }, []);
 
@@ -32,14 +52,14 @@ const RecipesPage = ({ match }) => {
           `https://api.edamam.com/search?q=${qry}&app_id=${EDAMAM_APPID}&app_key=${EDAMAM_APPKEY}&from=0&to=20`
         );
         const data = await request.json();
-
         if (!data) {
           console.log("ERROR - could not retrieve data");
           setApiError("ERROR - could not retrieve data");
         } else {
+          console.log(data.hits);
           setRecipes(data.hits);
         }
-        setShowRecipes(true);
+        ////setRecipes(sdata);
       } catch (err) {
         console.log("error", err);
         setApiError("Could not retrive selected records. Netowrk problem.");

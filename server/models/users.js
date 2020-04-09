@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 //const jwt = require("jwt-simple");
 const jwt = require("jsonwebtoken");
+
 const SALT_I = 10;
 const config = require("../config");
 
@@ -62,7 +63,6 @@ userSchema.methods.generateToken = function (cb) {
   var token = jwt.sign(
     {
       id: user.id,
-      username: user.username,
     },
     config.secret
   );
@@ -74,6 +74,19 @@ userSchema.methods.generateToken = function (cb) {
   ) {
     if (err) return cb(err);
     cb(null, user);
+  });
+};
+
+userSchema.statics.findByToken = function (token, cb) {
+  var user = this;
+
+  jwt.verify(token, config.secret, function (err, decode) {
+    // user.findOne({ _id: decode }, function (err, user) {
+    //   if (err) return cb(err);
+    //   cb(null, user);
+    // });
+    if (err) return cb(err);
+    cb(decode);
   });
 };
 const User = mongoose.model("User", userSchema);

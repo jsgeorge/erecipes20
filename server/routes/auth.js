@@ -18,7 +18,7 @@ router.post("/", (req, res) => {
         return res.status(403).json({
           errors: { form: "Login failed, Wrong password" },
         });
-
+      console.log(user);
       // res.status(200).json({
       //   token: tokenForUser(user)
       // });
@@ -26,15 +26,23 @@ router.post("/", (req, res) => {
         if (err) {
           return res.status(404).json({ errors: { form: err } });
         }
-        console.log("Login successfull");
-        res.status(200).json({
-          loginSuccess: true,
-          token: user.token,
-        });
+        //   console.log("Login successfull");
+        //   res.status(200).json({
+        //     user: user
+        //   });
         // .cookie("w_auth", user.token)
         // res.status(200).json({
         //   loginSuccess: true,
         // });
+        // });
+        let currentUser = {
+          _id: user._id,
+          email: user.email,
+          username: user.username,
+          favorites: user.favorites,
+        };
+        console.log("currentUser", currentUser);
+        res.status(200).json({ user: currentUser, token: user.token });
       });
     });
   });

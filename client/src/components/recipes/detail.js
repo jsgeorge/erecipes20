@@ -1,8 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useReducer } from "react";
 import { Link } from "react-router-dom";
 import { EDAMAM_APPID, EDAMAM_APPKEY } from "../constants";
 import { UserContext } from "../../context/user-context";
 import axios from "axios";
+import jwtDecode from "jwt-decode";
+//import { sdata } from "../constants";
 
 const RecipeDetailPage = ({ match }) => {
   const [recipes, setRecipes] = useState([]);
@@ -12,12 +14,35 @@ const RecipeDetailPage = ({ match }) => {
   const [errors, setErrors] = useState([]);
   const [state, dispatch] = useContext(UserContext);
   const [savedRecipe, setSavedRecipe] = useState(false);
+  const [isAthenticated, setIsAuthenticated] = useState(false);
+  
+  const setAuthUser = async (token) => {
+    const response = await axios.post("/users/id", { id: token.id });
+    dispatch({
+      type: "SET_USER",
+      payload: response.data,
+    });
+  };
 
   useEffect(() => {
+     console.log("detail user", state.user[0]);
+    if (!state.user[0] && localStorage.jwtToken) {
+      setAuthUser(jwtDecode(localStorage.jwtToken));
+    }
+    if (state.user[0]) {
+      setIsAuthenticated(true);
+    }
     setCategory(match.params.c);
     setLabel(match.params.l);
     setSource(match.params.s);
     getRecipes();
+    if (isAthenticated) {
+      state.user[0].user.favorites.map((f) => {
+        if (f.label === match.params.l && f.source === match.params.s) {
+          setSavedRecipe(true);
+        }
+      });
+    }
   });
 
   const getRecipes = async () => {
@@ -26,45 +51,76 @@ const RecipeDetailPage = ({ match }) => {
       const request = await fetch(
         `https://api.edamam.com/search?q=${item}&to=1&app_id=${EDAMAM_APPID}&app_key=${EDAMAM_APPKEY}`
       );
+
       const data = await request.json();
       setRecipes(data.hits);
-      console.log(recipes);
+     // setRecipes(sdata);
+      
     } else {
       setErrors("Error could not retrieve recipe. Invalid search query");
     }
   };
-  const saveRecipe = async (label, source, image) => {
-    setSavedRecipe(!savedRecipe);
-    let favorite = {
-      label: label,
-      source: source,
-      imgURL: image,
-    };
-    try {
-      const response = await axios.post("/users/favorite", favorite);
-      dispatch({
-        type: "UPDATE_FAVORITE",
-        payload: response.data,
-      });
-    } catch (err) {
-      console.log(err);
+  const saveRecipe = async (id, label, source, image) => {
+    if (isAthenticated) {
+      console.log("userid in saveRecipe", state.user[0].user._id);
+      let favorite = {
+        uid: state.user[0].user._id,
+        id: id,
+        label: label,
+        source: source,
+        imgURL: image,
+      };
+      console.log(state.user[0].user._id);
+
+      try {
+        const response = await axios.post("/users/addfavorite", favorite);
+        dispatch({
+          type: "ADD_FAVORITE",
+          payload: response.data,
+        });
+        setSavedRecipe(true);
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
+  const unSaveRecipe = async (id) => {
+    //if (isAthenticated) {
+      let favorite = {
+        uid: state.user[0].user._id,
+        id: id,
+      };
+    
+      try {
+        const response = await axios.post("/users/delfavorite", favorite);
+        dispatch({
+          type: "DEL_FAVORITE",
+          payload: response.data,
+        });
+        setSavedRecipe(false);
+        console.log(savedRecipe);
+      } catch (err) {
+        console.log(err);
+      }
+    //}
+  };
+  const onSaveRecipe = async (id, label, source, image) => {
+    saveRecipe(id, label, source, image);
+  };
 
-  const onSaveRecipe = async (label, source, image) => {
-    await saveRecipe(label, source, image);
+  const onUnSaveRecipe = async (id) => {
+    unSaveRecipe(id);
   };
   return (
     <div className="page-wrapper ">
       {recipes ? (
         recipes.map((recipe) => (
-          <div className="detailWrapper">
+          <div key={label} className="detailWrapper">
             <div className="recipeHeader">
-            <Link to="/">categories></Link> >{" "}
-                
+              <Link to="/">categories></Link> >{" "}
               {category ? (
                 <span>
-                   <Link to={`/${category}`}> {category}</Link> <br />
+                  <Link to={`/${category}`}> {category}</Link> <br />
                 </span>
               ) : (
                 <Link to="/user">
@@ -98,36 +154,36 @@ const RecipeDetailPage = ({ match }) => {
                     <br />
                   </p>
                 </div>
-
-                <div style={{ paddingBottom: "15px" }}>
-                  <button
-                    style={{ background: "transparent", border: "none" }}
-                    onClick={() =>
-                      onSaveRecipe(
-                        recipe.recipe.label,
-                        recipe.recipe.source,
-                        recipe.recipe.image
-                      )
-                    }
-                  >
+                {isAthenticated ? (
+                  <div style={{ paddingBottom: "15px" }}>
                     {!savedRecipe ? (
-                      <span>
-                        {" "}
+                      <button
+                        style={{ background: "transparent", border: "none" }}
+                        onClick={() =>
+                          onSaveRecipe(
+                            recipe.recipe.uri,
+                            recipe.recipe.label,
+                            recipe.recipe.source,
+                            recipe.recipe.image
+                          )
+                        }
+                      >
                         <i className="fa fa-heart" style={{ color: "gray" }}>
                           {" "}
                         </i>{" "}
                         Save{" "}
-                      </span>
+                      </button>
                     ) : (
-                      <span>
-                        <i className="fa fa-heart" style={{ color: "red" }}>
-                          {" "}
-                        </i>{" "}
+                      <button
+                        style={{ background: "transparent", border: "none" }}
+                        onClick={() => onUnSaveRecipe(recipe.recipe.uri)}
+                      >
+                        <i className="fa fa-heart" style={{ color: "red" }}></i>
                         Saved
-                      </span>
+                      </button>
                     )}
-                  </button>
-                </div>
+                  </div>
+                ) : null}
               </div>
               <div className="col-lg-4 col-md-6 col-sm-6 detailSection">
                 <h4>Ingredients</h4>

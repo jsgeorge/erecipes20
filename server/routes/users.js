@@ -1,16 +1,24 @@
 const User = require("../models/users");
 const router = require("express").Router();
-//const uid = "5e87a4aeec5ce0255c8c4b98";
 const mongoose = require("mongoose");
 
-router.get("/id", (req, res) => {
-  const uid = "";
+router.post("/id", (req, res) => {
+  const uid = req.body.id; //"5e87a4aeec5ce0255c8c4b98";
   if (uid) {
-    User.find({ _id: mongoose.Types.ObjectId(uid) }).exec((err, docs) => {
+    User.findOne({ _id: mongoose.Types.ObjectId(uid) }).exec((err, user) => {
       if (err) {
         console.log("error", err);
       }
-      return res.status(200).json(docs);
+      if (!user) {
+        console.log("error", "no user found");
+      }
+      let currentUser = {
+        _id: user._id,
+        email: user.email,
+        username: user.username,
+        favorites: user.favorites,
+      };
+      res.status(200).json({ user: currentUser });
     });
   } else {
     return res.status(301).json({ errors: { form: "zUser is undefined" } });
@@ -47,12 +55,16 @@ router.post("/", (req, res) => {
   });
 });
 
-router.post("/favorite", (req, res) => {
-  let id = uid;
-  let recipe = req.body;
-  console.log(req.body);
+router.post("/addfavorite", (req, res) => {
+ let recipe = {
+    id: req.body.id,
+    label: req.body.label,
+    source: req.body.source,
+    imgURL: req.body.imgURL,
+  };
+  
   User.findOneAndUpdate(
-    { _id: id },
+    { _id: req.body.uid },
     { $push: { favorites: recipe } },
     { new: true },
     (err, doc) => {
@@ -60,7 +72,23 @@ router.post("/favorite", (req, res) => {
         console.log("Error", err);
         return res.json({ success: false, err });
       }
-      console.log("recipe added to user favorites");
+      res.status(200).json({
+        success: true,
+      });
+    }
+  );
+});
+router.post("/delfavorite", (req, res) => {
+  const { uid, id } = req.body;
+  User.findOneAndUpdate(
+    { _id: uid },
+    { $pull: { favorites: { id: id } } },
+    { multi: true },
+    (err, doc) => {
+      if (err) {
+        console.log("Error", err);
+        return res.json({ success: false, err });
+      }
       res.status(200).json({
         success: true,
       });

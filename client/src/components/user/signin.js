@@ -2,31 +2,56 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { UserContext } from "../../context/user-context";
 import axios from "axios";
+import classnames from "classnames";
 
-const SigninPage = ({}) => {
+const SigninPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [redirect, setRedirect] = useState(false);
+  const [user, setUser] = useState("");
   const [state, dispatch] = useContext(UserContext);
-  const LoginUser = () => {};
-
+const [errors, setErrors] = useState({});
+  
   useEffect(() => {});
-
+  const validData = () =>{
+    
+    let errs = {};
+    if (!email){
+      errs.email = 'Inalid/Missing email';
+      
+    }
+    if (!password){
+      errs.password= "Invalid/Missing password";
+     
+    }
+     setErrors(errs )
+    console.log(errors);
+    
+    if (errors) return true
+    return false
+  }
   const signinUser = async () => {
-    let userData = {
-      email: email,
-      password: password,
-    };
-    try {
-      const response = await axios.post("/auth", userData);
-      dispatch({
-        type: "LOGIN_USER",
-        payload: response.data,
-      });
-      setRedirect(true);
-    } catch (err) {
-      console.log(err);
+     setErrors({})
+   
+    if (validData()){
+      let userData = {
+        email: email,
+        password: password,
+      };
+      try {
+        const response = await axios.post("/auth", userData);
+        dispatch({
+          type: "LOGIN_USER",
+          payload: response.data,
+        });
+        localStorage.setItem("jwtToken", response.data.token);
+        setRedirect(true);
+      } catch (err) {
+        console.log("Invalid Login");
+        let errs={ form : "Invalid Login"}
+        setErrors(errs)
+      }
     }
   };
 
@@ -45,8 +70,12 @@ const SigninPage = ({}) => {
             <h3>Sign In</h3>
           </div>
           <div className="form-wrapper">
-            <div className="form-group">
-              <input
+           {errors.form && <div className="alert alert-danger">{errors.form}</div>}
+
+             <div className={classnames("form-group", { "has-error": errors })}>
+                {errors.email && <span className="help-block">{errors.email}</span>}
+            
+                <input
                 className="form-control"
                 aria-label="Enter your task"
                 data-testid="add-task-content"
@@ -55,8 +84,10 @@ const SigninPage = ({}) => {
                 placeholder="Email"
                 onChange={(e) => setEmail(e.target.value)}
               />
-            </div>
-            <div className="form-group">
+             </div>
+           <div className={classnames("form-group", { "has-error": errors })}>
+                {errors.password && <span className="help-block">{errors.password}</span>}
+          
               <input
                 className="form-control"
                 aria-label="Enter your task"
@@ -66,10 +97,8 @@ const SigninPage = ({}) => {
                 placeholder="password"
                 onChange={(e) => setPassword(e.target.value)}
               />
-            </div>
-            {errMsg ? (
-              <div className="errMsgFont">Login Error. {errMsg}</div>
-            ) : null}
+             </div>
+           
             <button
               type="button"
               className="btn btn-danger btn-sm"

@@ -4,49 +4,50 @@ import { UserContext } from "../../context/user-context";
 import axios from "axios";
 import RecipeItem from "../recipes/item";
 import { EDAMAM_APPID, EDAMAM_APPKEY } from "../constants";
+import jwtDecode from "jwt-decode";
 
-const UserPage = ({}) => {
+const UserPage = () => {
   const [errMsg, setErrMsg] = useState("");
   const [redirect, setRedirect] = useState(false);
   const [state, dispatch] = useContext(UserContext);
-  const [recipe, setRecipe] = useState([]);
-  const [header, setHeader] = useState("");
-  const [srchTerm, setSrchTerm] = useState("");
-  const [errors, setErrors] = useState([]);
-  const [apiError, setApiError] = useState("");
-  const [showRecipes, setShowRecipes] = useState(false);
-
+  const [user, setUser] = useState({});
+ const setAuthUser = async (token) => {
+    const response = await axios.post("/users/id", { id: token.id });
+    dispatch({
+      type: "SET_USER",
+      payload: response.data,
+    });
+  };
+ 
+ 
   useEffect(() => {
-    const getUser = async () => {
-      try {
-        const response = await axios.get("/users/id");
-        dispatch({
-          type: "FETCH_USER",
-          payload: response.data,
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    };
+     if (!state.user[0] && localStorage.jwtToken) {
+      setAuthUser(jwtDecode(localStorage.jwtToken));
+    }
+  }, []);
 
-    getUser();
-  }, [dispatch]);
-  console.log("User", state.user[0]);
-  const { username, email, favorites } = state.user;
+  //const { username, email, favorites } = state.user[0];
 
   // if (!state.user) return <div className="page-wrapper">No such user</div>;
-  if (!state.user || !state.user._id) {
-    return <Redirect to="/user/signin" />;
-  }
+ 
+
+  const onLogout = () => {
+    localStorage.clear();
+    dispatch({
+      type: "LOGOUT_USER",
+    });
+    setRedirect(true);
+  };
+  if (!state.user[0] && !localStorage.jwtToken ) return <Redirect to="/user/signin" />;
   return (
     <div className="page-wrapper ">
-      <div className="userPanel">
+      <div className="col-lg-8 col-md-12 col-sm-12 userPanel">
         <h3>Profile Page</h3>
         {state.user[0] ? (
-          <div key={state.user[0]._id}>
+          <div>
             <p>
-              <strong>Username</strong> {state.user[0].username} <br />
-              <strong>Email</strong> {state.user[0].email}
+              <strong>Username</strong> {state.user[0].user.username} <br />
+              <strong>Email</strong> {state.user[0].user.email}
             </p>
             <div>
               <Link to="/" className="btn btn-danger btn-sm">
@@ -59,6 +60,7 @@ const UserPage = ({}) => {
               <button
                 className="btn btn-default btn-sm"
                 style={{ marginTop: "20px", color: "red" }}
+                onClick={() => onLogout()}
               >
                 Logout
               </button>
@@ -68,10 +70,13 @@ const UserPage = ({}) => {
               <h5>Your Saved Recipes</h5>
               <div>
                 <div className="row">
-                  {state.user[0].favorites &&
-                  state.user[0].favorites.length > 0 ? (
-                    state.user[0].favorites.map((f) => (
-                      <div className="col-md-3 col-sm-3 col-xs-4 recipeItem">
+                  {state.user[0].user.favorites &&
+                  state.user[0].user.favorites.length > 0 ? (
+                    state.user[0].user.favorites.map((f) => (
+                      <div
+                        key={f.id}
+                        className="col-md-3 col-sm-3 col-xs-4 recipeItem"
+                      >
                         <div className="card mb-3 box-shadow">
                           <Link to={`/recipes/${f.label}/${f.source}`}>
                             <img

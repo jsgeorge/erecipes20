@@ -6,7 +6,7 @@ export const UserContext = createContext();
 const initialState = {
   users: [],
   user: {}, // selected or new
-  message: {}, // { type: 'success|fail', title:'Info|Error' content:'lorem ipsum'}
+  // message: {}, // { type: 'success|fail', title:'Info|Error' content:'lorem ipsum'}
 };
 
 function reducer(state, action) {
@@ -22,13 +22,19 @@ function reducer(state, action) {
         },
       };
     }
-    case "FETCH_USERS": {
+    case "SET_USER": {
       return {
         ...state,
-        users: action.payload,
-        user: {},
+        user: [action.payload],
       };
     }
+    // case "FETCH_USERS": {
+    //   return {
+    //     ...state,
+    //     users: action.payload,
+    //     user: {},
+    //   };
+    // }
     case "CREATE_USER": {
       return {
         ...state,
@@ -48,7 +54,7 @@ function reducer(state, action) {
         message: {},
       };
     }
-    case "UPDATE_FAVORITE": {
+    case "ADD_FAVORITE": {
       const user = action.payload;
       return {
         ...state,
@@ -60,14 +66,31 @@ function reducer(state, action) {
         },
       };
     }
+    case "DEL_FAVORITE": {
+      const user = action.payload;
+      return {
+        ...state,
+        users: state.users.map((item) => (item._id === user._id ? user : item)),
+        message: {
+          type: "success",
+          title: "Update Successful",
+          content: `User  has been updated!`,
+        },
+      };
+    }
+    case "LOGOUT_USER": {
+      return {
+        ...state,
+        user: {},
+      };
+    }
     default:
       throw new Error();
   }
 }
 
-export const UserContextProvider = (props) => {
+export const UserContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { children } = props;
 
   return (
     <UserContext.Provider value={[state, dispatch]}>
