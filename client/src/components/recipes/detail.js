@@ -11,6 +11,8 @@ const RecipeDetailPage = ({ match }) => {
   const [label, setLabel] = useState([]);
   const [category, setCategory] = useState([]);
   const [source, setSource] = useState([]);
+   const [apiError, setApiError] = useState([]);
+ 
   const [errors, setErrors] = useState([]);
   const [state, dispatch] = useContext(UserContext);
   const [savedRecipe, setSavedRecipe] = useState(false);
@@ -46,8 +48,10 @@ const RecipeDetailPage = ({ match }) => {
   });
 
   const getRecipes = async () => {
+    setApiError("");
     let item = label + " " + source;
     if (item) {
+      try{
       const request = await fetch(
         `https://api.edamam.com/search?q=${item}&to=1&app_id=${EDAMAM_APPID}&app_key=${EDAMAM_APPKEY}`
       );
@@ -55,7 +59,10 @@ const RecipeDetailPage = ({ match }) => {
       const data = await request.json();
       setRecipes(data.hits);
      // setRecipes(sdata);
-      
+      } catch (err) {
+        console.log("error", err);
+        setApiError("Could not retrive selected record. Network problem.");
+      }
     } else {
       setErrors("Error could not retrieve recipe. Invalid search query");
     }
@@ -128,6 +135,8 @@ const RecipeDetailPage = ({ match }) => {
                 </Link>
               )}
             </div>
+            
+         
             <div className="row recipeDetail" key={recipe.recipe.label}>
               <div className="col-lg-4 col-md-6 col-sm-6 detailHeader">
                 <h3>{recipe.recipe.label} </h3>

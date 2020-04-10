@@ -33,7 +33,7 @@ const RecipesPage = ({ match }) => {
       setAuthUser(jwtDecode(localStorage.jwtToken));
     }
     console.log("home user", state.user[0]);
-    
+
     if (match.params.category) showCategory(match.params.category);
   }, []);
 
@@ -51,21 +51,31 @@ const RecipesPage = ({ match }) => {
         const request = await fetch(
           `https://api.edamam.com/search?q=${qry}&app_id=${EDAMAM_APPID}&app_key=${EDAMAM_APPKEY}&from=0&to=20`
         );
+        // const request = await fetch(
+        // "https://jsonplaceholder.typicode.com/posts"
+        //)
+        // const request = await fetch(
+        //   "movie-database-imdb-alternative.p.rapidapi.com?page=1&r=json&s=Avengers%20Endgame&x-rapidapi-key=95bcab4269msh504eb8fe30a7d34p16db21jsne501ac022ca9"
+        // );
         const data = await request.json();
         if (!data) {
           console.log("ERROR - could not retrieve data");
           setApiError("ERROR - could not retrieve data");
         } else {
-          console.log(data.hits);
+          console.log(data);
+          setShowRecipes(true);
           setRecipes(data.hits);
         }
-        ////setRecipes(sdata);
+        //setRecipes(sdata);
       } catch (err) {
         console.log("error", err);
-        setApiError("Could not retrive selected records. Netowrk problem.");
+        setApiError(
+          "Error. Could not retrive selected records. Netowrk problem."
+        );
       }
     } else {
       setErrors("Missing/invalid query");
+      setSrchTerm("");
       console.log("ERROR", "INvalid query");
       setShowRecipes(false);
     }
@@ -238,11 +248,7 @@ const RecipesPage = ({ match }) => {
               > {header}{" "}
             </h4>
           </div>
-          {apiError ? (
-            <div className="has-error">
-              Error in retriving recipes. {apiError}
-            </div>
-          ) : null}
+          {apiError ? <div className="has-error">{apiError}</div> : null}
 
           {/* <Link
             to={`/recipes/${header}/${"Vegi Burrito"}/${"Mexicali Delights"}`}
