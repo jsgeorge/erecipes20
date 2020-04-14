@@ -5,19 +5,19 @@ import { UserContext } from "../../context/user-context";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 //import { sdata } from "../constants";
+import hits from "../../data/recipes";
 
 const RecipeDetailPage = ({ match }) => {
-  const [recipes, setRecipes] = useState([]);
+  const [recipe, setRecipe] = useState([]);
   const [label, setLabel] = useState([]);
   const [category, setCategory] = useState([]);
   const [source, setSource] = useState([]);
-   const [apiError, setApiError] = useState([]);
- 
-  const [errors, setErrors] = useState([]);
+  const [apiError, setApiError] = useState([]);
+  const [errors, setErrors] = useState("");
   const [state, dispatch] = useContext(UserContext);
   const [savedRecipe, setSavedRecipe] = useState(false);
   const [isAthenticated, setIsAuthenticated] = useState(false);
-  
+
   const setAuthUser = async (token) => {
     const response = await axios.post("/users/id", { id: token.id });
     dispatch({
@@ -27,17 +27,16 @@ const RecipeDetailPage = ({ match }) => {
   };
 
   useEffect(() => {
-     console.log("detail user", state.user[0]);
     if (!state.user[0] && localStorage.jwtToken) {
       setAuthUser(jwtDecode(localStorage.jwtToken));
     }
     if (state.user[0]) {
       setIsAuthenticated(true);
     }
-    setCategory(match.params.c);
     setLabel(match.params.l);
     setSource(match.params.s);
-    getRecipes();
+    setCategory(match.params.c);
+    getRecipe(match.params.c + " " + match.params.s);
     if (isAthenticated) {
       state.user[0].user.favorites.map((f) => {
         if (f.label === match.params.l && f.source === match.params.s) {
@@ -45,23 +44,36 @@ const RecipeDetailPage = ({ match }) => {
         }
       });
     }
-  });
+  }, []);
 
-  const getRecipes = async () => {
-    setApiError("");
-    let item = label + " " + source;
+  const getRecipe = async (item) => {
+    setErrors("");
     if (item) {
-      try{
-      const request = await fetch(
-        `https://api.edamam.com/search?q=${item}&to=1&app_id=${EDAMAM_APPID}&app_key=${EDAMAM_APPKEY}`
-      );
+      try {
+        console.log("fetching data");
+        const request = await fetch(
+          `https://api.edamam.com/search?q=${item}&to=1&app_id=${EDAMAM_APPID}&app_key=${EDAMAM_APPKEY}`
+        );
 
-      const data = await request.json();
-      setRecipes(data.hits);
-     // setRecipes(sdata);
+        const data = await request.json();
+        if (!data) {
+          setErrors("ERROR - could not retrieve data");
+        } else {
+          setErrors("");
+          setRecipe(data.hits[0].recipe);
+        }
+
+        // let rec = hits.filter((data) => {
+        //   if (data.recipe.label.includes(label)) {
+        //     console.log("rec filter", data.recipe);
+        //     setRecipe(data.recipe);
+        //   }
+        // });
+
+        // setRecipe(sdata);
       } catch (err) {
-        console.log("error", err);
-        setApiError("Could not retrive selected record. Network problem.");
+        setErrors("Error could not retrieve recipe. Network Error");
+        // setApiError("ERROR could not retrieve recipe. Network Error");
       }
     } else {
       setErrors("Error could not retrieve recipe. Invalid search query");
@@ -69,15 +81,13 @@ const RecipeDetailPage = ({ match }) => {
   };
   const saveRecipe = async (id, label, source, image) => {
     if (isAthenticated) {
-      console.log("userid in saveRecipe", state.user[0].user._id);
       let favorite = {
         uid: state.user[0].user._id,
         id: id,
         label: label,
         source: source,
-        imgURL: image,
+        image: image,
       };
-      console.log(state.user[0].user._id);
 
       try {
         const response = await axios.post("/users/addfavorite", favorite);
@@ -91,26 +101,28 @@ const RecipeDetailPage = ({ match }) => {
       }
     }
   };
+
   const unSaveRecipe = async (id) => {
     //if (isAthenticated) {
-      let favorite = {
-        uid: state.user[0].user._id,
-        id: id,
-      };
-    
-      try {
-        const response = await axios.post("/users/delfavorite", favorite);
-        dispatch({
-          type: "DEL_FAVORITE",
-          payload: response.data,
-        });
-        setSavedRecipe(false);
-        console.log(savedRecipe);
-      } catch (err) {
-        console.log(err);
-      }
+    let favorite = {
+      uid: state.user[0].user._id,
+      id: id,
+    };
+
+    try {
+      const response = await axios.post("/users/delfavorite", favorite);
+      dispatch({
+        type: "DEL_FAVORITE",
+        payload: response.data,
+      });
+      setSavedRecipe(false);
+      console.log(savedRecipe);
+    } catch (err) {
+      console.log(err);
+    }
     //}
   };
+
   const onSaveRecipe = async (id, label, source, image) => {
     saveRecipe(id, label, source, image);
   };
@@ -118,105 +130,109 @@ const RecipeDetailPage = ({ match }) => {
   const onUnSaveRecipe = async (id) => {
     unSaveRecipe(id);
   };
+
+  //const { recipe } = recipe.recipe;
+
   return (
     <div className="page-wrapper ">
-      {recipes ? (
-        recipes.map((recipe) => (
-          <div key={label} className="detailWrapper">
-            <div className="recipeHeader">
-              <Link to="/">categories></Link> >{" "}
-              {category ? (
-                <span>
-                  <Link to={`/${category}`}> {category}</Link> <br />
-                </span>
-              ) : (
-                <Link to="/user">
-                  <i className="fa fa-angle-left fa-lg"></i>Back
-                </Link>
-              )}
-            </div>
-            
-         
-            <div className="row recipeDetail" key={recipe.recipe.label}>
-              <div className="col-lg-4 col-md-6 col-sm-6 detailHeader">
-                <h3>{recipe.recipe.label} </h3>
-                <h5>by {recipe.recipe.source}</h5>
-                <img
-                  src={recipe.recipe.image}
-                  alt="img"
-                  className="card-img-top"
-                />
-                <div>
-                  <p>
-                    <strong> Diet Labels</strong>{" "}
-                    {recipe.recipe.healthLabels.map((l) => (
-                      <span key={l}>{l}, </span>
-                    ))}
-                    <br />
-                    <strong>Coutions</strong>{" "}
-                    {recipe.recipe.cautions ? recipe.recipe.cautions : "none"}
-                    <br />
-                    <strong>Calories</strong> {recipe.recipe.calories}
-                    <br />
-                    <strong>Time To Prepare</strong> {recipe.recipe.totalTime}{" "}
-                    min
-                    <br />
-                  </p>
-                </div>
-                {isAthenticated ? (
-                  <div style={{ paddingBottom: "15px" }}>
-                    {!savedRecipe ? (
-                      <button
-                        style={{ background: "transparent", border: "none" }}
-                        onClick={() =>
-                          onSaveRecipe(
-                            recipe.recipe.uri,
-                            recipe.recipe.label,
-                            recipe.recipe.source,
-                            recipe.recipe.image
-                          )
-                        }
-                      >
-                        <i className="fa fa-heart" style={{ color: "gray" }}>
-                          {" "}
-                        </i>{" "}
-                        Save{" "}
-                      </button>
-                    ) : (
-                      <button
-                        style={{ background: "transparent", border: "none" }}
-                        onClick={() => onUnSaveRecipe(recipe.recipe.uri)}
-                      >
-                        <i className="fa fa-heart" style={{ color: "red" }}></i>
-                        Saved
-                      </button>
-                    )}
-                  </div>
-                ) : null}
-              </div>
-              <div className="col-lg-4 col-md-6 col-sm-6 detailSection">
-                <h4>Ingredients</h4>
-                {recipe.recipe.ingredients.map((i) => (
-                  <p key={i.text + " " + i.weight}>{i.text}</p>
-                ))}
-              </div>
+      <div key={label} className="detailWrapper">
+        <div className="recipeHeader">
+          <Link to="/">categories></Link> >{" "}
+          {category ? (
+            <span>
+              <Link to={`/${category}`}> {category}</Link> <br />
+            </span>
+          ) : (
+            <Link to="/user">
+              <i className="fa fa-angle-left fa-lg"></i>Back
+            </Link>
+          )}
+        </div>
+        {!errors && recipe ? (
+          // recipe.map((recipe) => (
+          <div className="row recipeDetail">
+            <div className="col-lg-4 col-md-6 col-sm-6 detailHeader">
+              <h3>{label} </h3>
+              <h5>by {source}</h5>
 
-              <div className="col-lg-4 col-md-6 col-sm-6 detailSection">
-                <h4>Nutrients</h4>
+              <img src={recipe.image} alt="img" className="card-img-top" />
+              <div>
                 <p>
-                  <strong>
-                    {recipe.recipe.totalNutrients.ENERC_KCAL.label}
-                  </strong>
-                  {recipe.recipe.totalNutrients.ENERC_KCAL.quantity}{" "}
-                  {recipe.recipe.totalNutrients.ENERC_KCAL.unit}
+                  <strong> Diet Labels</strong>{" "}
+                  {recipe.healthLabels &&
+                    recipe.healthLabels.map((l) => <span key={l}>{l}, </span>)}
+                  <br />
+                  <strong>Coutions</strong>{" "}
+                  {recipe.cautions ? recipe.cautions : "none"}
+                  <br />
+                  <strong>Calories</strong> {recipe.calories}
+                  <br />
+                  <strong>Time To Prepare</strong> {recipe.totalTime} min
+                  <br />
                 </p>
               </div>
+              {isAthenticated ? (
+                <div style={{ paddingBottom: "15px" }}>
+                  {!savedRecipe ? (
+                    <button
+                      style={{ background: "transparent", border: "none" }}
+                      onClick={() =>
+                        onSaveRecipe(
+                          recipe.uri,
+                          recipe.label,
+                          recipe.source,
+                          recipe.image
+                        )
+                      }
+                    >
+                      <i className="fa fa-heart" style={{ color: "gray" }}>
+                        {" "}
+                      </i>{" "}
+                      Save{" "}
+                    </button>
+                  ) : (
+                    <button
+                      style={{ background: "transparent", border: "none" }}
+                      onClick={() => onUnSaveRecipe(recipe.uri)}
+                    >
+                      <i className="fa fa-heart" style={{ color: "red" }}></i>
+                      Saved
+                    </button>
+                  )}
+                </div>
+              ) : null}
+            </div>
+            <div className="col-lg-4 col-md-6 col-sm-6 detailSection">
+              <h4>Ingredients</h4>
+              {recipe.ingredients &&
+                recipe.ingredients.map((i) => (
+                  <p key={i.text + " " + i.weight}>{i.text}</p>
+                ))}
+            </div>
+
+            <div className="col-lg-4 col-md-6 col-sm-6 detailSection">
+              <h4>Nutrients</h4>
+              {recipe.totalNutrients ? (
+                <p>
+                  <strong>{recipe.totalNutrients.ENERC_KCAL.label}</strong>
+                  {recipe.totalNutrients.ENERC_KCAL.quantity}{" "}
+                  {recipe.totalNutrients.ENERC_KCAL.unit}
+                </p>
+              ) : null}
             </div>
           </div>
-        ))
-      ) : (
-        <div>Error Cannot retrieve recipe</div>
-      )}
+        ) : (
+          //))
+          <div className="recipeDetail">
+            <h3>{label} </h3>
+            <h5>by {source}</h5>
+            <div className="has-error">
+              Error Cannot retrieve recipe{" "}
+              {errors ? <span>Network Error</span> : null}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

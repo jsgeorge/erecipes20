@@ -24,7 +24,7 @@ router.post("/", (req, res) => {
       // });
       user.generateToken((err, user) => {
         if (err) {
-          return res.status(404).json({ errors: { form: err } });
+          return res.status(404).json({ error: err });
         }
         //   console.log("Login successfull");
         //   res.status(200).json({

@@ -56,13 +56,13 @@ router.post("/", (req, res) => {
 });
 
 router.post("/addfavorite", (req, res) => {
- let recipe = {
+  let recipe = {
     id: req.body.id,
     label: req.body.label,
     source: req.body.source,
-    imgURL: req.body.imgURL,
+    image: req.body.image,
   };
-  
+
   User.findOneAndUpdate(
     { _id: req.body.uid },
     { $push: { favorites: recipe } },

@@ -9,7 +9,6 @@ const RecipeItem = ({ category, recipe }) => {
 
     if (category) queryStr = `/recipes/${category}/${label}/${source}`;
     else queryStr = `/recipes/${label}/${source}`;
-
     //const srchItem = "c=" + category + "l=" + label + "s=" + source;
     return (
       <div className=" col-md-4 col-sm-4 col-xs-4 recipeItem">

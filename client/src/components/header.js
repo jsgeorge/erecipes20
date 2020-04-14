@@ -6,13 +6,12 @@ const Header = () => {
   const [redirect, setRedirect] = useState(false);
   const [state, dispatch] = useContext(UserContext);
   const [isAthenticated, setIsAuthenticated] = useState(false);
-  
-  useEffect(()=>{
-     console.log("header user", state.user[0]);
-     if (state.user[0]) {
+
+  useEffect(() => {
+    if (state.user[0]) {
       setIsAuthenticated(true);
     }
-  })
+  });
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-light bg-white fixed-top">

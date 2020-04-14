@@ -3,6 +3,7 @@ import { Link, Redirect } from "react-router-dom";
 import { UserContext } from "../../context/user-context";
 import axios from "axios";
 import classnames from "classnames";
+import { FlashMessage, flashErrorMessage } from "../flash-message";
 
 const SigninPage = () => {
   const [email, setEmail] = useState("");
@@ -11,30 +12,32 @@ const SigninPage = () => {
   const [redirect, setRedirect] = useState(false);
   const [user, setUser] = useState("");
   const [state, dispatch] = useContext(UserContext);
-const [errors, setErrors] = useState({});
-  
+  const [errors, setErrors] = useState({});
+
   useEffect(() => {});
-  const validData = () =>{
-    
+
+  const validData = () => {
     let errs = {};
-    if (!email){
-      errs.email = 'Inalid/Missing email';
-      
+    setErrors({});
+    if (!email) {
+      errs.email = "Inalid/Missing email";
     }
-    if (!password){
-      errs.password= "Invalid/Missing password";
-     
+    if (!password) {
+      errs.password = "Invalid/Missing password";
     }
-     setErrors(errs )
+    console.log(errs);
+    if (errs.email || errs.password) {
+      setErrors(errs);
+    }
     console.log(errors);
-    
-    if (errors) return true
-    return false
-  }
+    if (errors) return false;
+    return true;
+  };
   const signinUser = async () => {
-     setErrors({})
-   
-    if (validData()){
+    setErrors("");
+    validData();
+    if (email && password) {
+      console.log("true");
       let userData = {
         email: email,
         password: password,
@@ -47,11 +50,12 @@ const [errors, setErrors] = useState({});
         });
         localStorage.setItem("jwtToken", response.data.token);
         setRedirect(true);
-      } catch (err) {
-        console.log("Invalid Login");
-        let errs={ form : "Invalid Login"}
-        setErrors(errs)
+      } catch (error) {
+       setErrors({form: "invalid email and/or password"})
+        //flashErrorMessage(dispatch, error);
       }
+    } else {
+      console.log("false");
     }
   };
 
@@ -70,12 +74,16 @@ const [errors, setErrors] = useState({});
             <h3>Sign In</h3>
           </div>
           <div className="form-wrapper">
-           {errors.form && <div className="alert alert-danger">{errors.form}</div>}
+            {/* {state.message.content && <FlashMessage message = {state.message}/>}
+            */}
+            {errors.form && <div className="alert alert-danger">{errors.form}</div>}
 
-             <div className={classnames("form-group", { "has-error": errors })}>
-                {errors.email && <span className="help-block">{errors.email}</span>}
-            
-                <input
+            <div className={classnames("form-group", { "has-error": errors })}>
+              {errors.email && (
+                <span className="help-block">{errors.email}</span>
+              )}
+
+              <input
                 className="form-control"
                 aria-label="Enter your task"
                 data-testid="add-task-content"
@@ -84,10 +92,12 @@ const [errors, setErrors] = useState({});
                 placeholder="Email"
                 onChange={(e) => setEmail(e.target.value)}
               />
-             </div>
-           <div className={classnames("form-group", { "has-error": errors })}>
-                {errors.password && <span className="help-block">{errors.password}</span>}
-          
+            </div>
+            <div className={classnames("form-group", { "has-error": errors })}>
+              {errors.password && (
+                <span className="help-block">{errors.password}</span>
+              )}
+
               <input
                 className="form-control"
                 aria-label="Enter your task"
@@ -97,8 +107,8 @@ const [errors, setErrors] = useState({});
                 placeholder="password"
                 onChange={(e) => setPassword(e.target.value)}
               />
-             </div>
-           
+            </div>
+
             <button
               type="button"
               className="btn btn-danger btn-sm"

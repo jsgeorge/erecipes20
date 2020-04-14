@@ -6,7 +6,7 @@ export const UserContext = createContext();
 const initialState = {
   users: [],
   user: {}, // selected or new
-  // message: {}, // { type: 'success|fail', title:'Info|Error' content:'lorem ipsum'}
+  message: {}, // { type: 'success|fail', title:'Info|Error' content:'lorem ipsum'}
 };
 
 function reducer(state, action) {
