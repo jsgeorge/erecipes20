@@ -10,7 +10,7 @@ const SigninPage = () => {
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [redirect, setRedirect] = useState(false);
-  const [user, setUser] = useState("");
+  const [user, setUser] = useContext(UserContext);
   const [state, dispatch] = useContext(UserContext);
   const [errors, setErrors] = useState({});
 
@@ -48,10 +48,12 @@ const SigninPage = () => {
           type: "LOGIN_USER",
           payload: response.data,
         });
+        //setUser(response.data.user);
+        console.log("logged in as ", response.data.user);
         localStorage.setItem("jwtToken", response.data.token);
         setRedirect(true);
       } catch (error) {
-       setErrors({form: "invalid email and/or password"})
+        setErrors({ form: "invalid email and/or password" });
         //flashErrorMessage(dispatch, error);
       }
     } else {
@@ -75,8 +77,10 @@ const SigninPage = () => {
           </div>
           <div className="form-wrapper">
             {/* {state.message.content && <FlashMessage message = {state.message}/>}
-            */}
-            {errors.form && <div className="alert alert-danger">{errors.form}</div>}
+             */}
+            {errors.form && (
+              <div className="alert alert-danger">{errors.form}</div>
+            )}
 
             <div className={classnames("form-group", { "has-error": errors })}>
               {errors.email && (

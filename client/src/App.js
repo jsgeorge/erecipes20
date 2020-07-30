@@ -1,6 +1,6 @@
 import React from "react";
 import logo from "./logo.svg";
-import "./css/boostrap.css";
+//import "./css/boostrap.css";
 //import "./css/fontawesome.css";
 import "./App.css";
 import Routes from "./Routes";
@@ -14,7 +14,7 @@ function App() {
     <UserContextProvider>
       <BrowserRouter>
         <Header />
-        <div className="container">
+        <div className="container margin-top">
           <Routes />
         </div>
         <Footer />

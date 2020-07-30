@@ -4,6 +4,45 @@ body {
 .container {
   min-width: 200px;
 }
+.primary-clr {
+  color: rgb(221, 41, 9);
+}
+.primary {
+  background: rgb(221, 41, 9);
+}
+.primary-btn-clr {
+  color: #777;
+}
+.primary-btn {
+  background-color: #777;
+}
+.margin-top {
+  margin-top: 0px;
+}
+.navbar-header {
+  width: 300px;
+  margin: 0;
+  padding: 0;
+}
+.navbar-header a {
+  font-size: 24px;
+  font-weight: bold;
+}
+.navbar-right {
+  margin-top: 0px;
+  width: 350px;
+}
+.navbar-right a {
+  margin-right: 20px;
+  margin-top: 0px;
+  float: left;
+  width: 100px;
+  margin-right: 20px;
+  color: #333;
+}
+.navbar-right a:last-child {
+  margin: 0;
+}
 .nav {
   border-bottom: 1px solid #ccc;
 }
@@ -20,7 +59,33 @@ a:hover {
   padding-bottom: 15px;
 }
 .srchBtn {
-  background: #fff;
+  background: #ccc;
+}
+.detailSection {
+  padding-top: 10px;
+  clear: left;
+}
+.detailSection h4 {
+  background: orange;
+  padding: 4px 10px;
+  height: 30px;
+  display: block;
+  font-size: 18px;
+  font-weight: bold;
+}
+.detail-recipe {
+  width: 50%;
+  float: right;
+  padding-left: 20px;
+}
+.detail-image {
+  width: 40%;
+  float: left;
+  margin-bottom: 20px;
+}
+.card-title {
+  font-size: 20px;
+  font-weight: bold;
 }
 .recipeWrapper h4 {
   font-size: 20px;
@@ -34,18 +99,18 @@ a:hover {
   text-decoration: none;
 }
 .selCategory {
-  margin-bottom: 5px;
+  margin-bottom: 0px;
 }
 .categoryCaption {
   position: absolute;
-  top: 35%;
+  top: 86%;
 
   left: 0;
   z-index: 99;
   color: #111;
   cursor: pointer;
   background: transparent;
-  padding: 1px 5px;
+  padding: 0;
   width: 100%;
 }
 .categoryCaption h3 {
@@ -55,6 +120,7 @@ a:hover {
   font-weight: bold;
   cursor: pointer;
   font-weight: bold;
+  background: rgba(0, 0, 0, 0.2);
 }
 .imgCategory img {
   height: 140px;
@@ -66,7 +132,7 @@ a:hover {
 }
 .recipeDetail {
   background: #fff;
-  padding: 10px;
+  padding: 40px;
 }
 .has-error {
   color: red;
@@ -81,9 +147,7 @@ footer {
 .card-title {
   font-size: 18px;
 }
-.detailSection {
-  padding-top: 50px;
-}
+
 .recipeHeader {
   width: 100%;
   padding: 5px 10px;
@@ -138,10 +202,24 @@ a {
   .mobile {
     display: none;
   }
+  .categoryCaption {
+    top: 85%;
+    width: 100%;
+  }
+  .categoryCaption h3 {
+    font-size: 19px;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.4);
+  }
 }
 @media (min-width: 572px) and (max-width: 770px) {
   .container {
     max-width: 700px;
+  }
+  .navbar-right {
+  }
+  .navbar-header {
+    width: 200px;
   }
   .row {
     margin: 0;
@@ -154,11 +232,14 @@ a {
     width: 33%;
   }
   .categoryCaption {
-    top: 35%;
+    top: 85%;
+    width: 100%;
   }
   .categoryCaption h3 {
-    font-size: 19px;
+    font-size: 14px;
     font-weight: bold;
+
+    background: rgba(0, 0, 0, 0.4);
   }
 
   .recipeItem {
@@ -178,6 +259,22 @@ a {
   .mobile {
     display: block;
   }
+  .navbar-header {
+    width: 90px;
+    font-size: 15px;
+  }
+  .navbar-header a {
+    font-size: 18px;
+    color: red;
+  }
+  .navbar-right {
+    width: 200px;
+  }
+  .navbar-right a {
+    width: 40px;
+    margin-right: 10%;
+  }
+
   .recipeHeader {
     padding: 0;
     height: 20px;
@@ -204,6 +301,9 @@ a {
     background: orange;
     padding: 4px 10px;
   }
+  .recipeDetail {
+    padding: 20px 3px;
+  }
   .CategoryLinks {
   }
   .row {
@@ -226,15 +326,18 @@ a {
   .categoryCaption {
     font-size: 14px;
     padding: 0;
-    top: 35%;
+    top: 82%;
     font-weight: bold;
   }
   .categoryCaption h3 {
     font-size: 16px;
     font-weight: bold;
+    background: rgba(0, 0, 0, 0.4);
   }
   .card-title {
     font-size: 16px;
+    font-weight: bold;
+    line-height: 0.9em;
   }
   .detailHeader h3 {
     padding-top: 10px;
@@ -265,6 +368,11 @@ a {
   .mobile {
     display: block;
   }
+  .card-title {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 0.8em;
+  }
   .selCategory {
     width: 100%;
     padding: 0px;
@@ -284,6 +392,7 @@ a {
   }
   .categoryCaption h3 {
     padding: 10px 0;
+    background: rgba(0, 0, 0, 0.2);
     border-bottom: 1px solid #ccc;
   }
   .recipeItem {

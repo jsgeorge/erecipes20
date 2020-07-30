@@ -6,7 +6,7 @@ import RecipeItem from "../recipes/item";
 import { EDAMAM_APPID, EDAMAM_APPKEY } from "../constants";
 import jwtDecode from "jwt-decode";
 
-const UserPage = () => {
+const FavoritesPage = () => {
   const [errMsg, setErrMsg] = useState("");
   const [redirect, setRedirect] = useState(false);
   const [state, dispatch] = useContext(UserContext);
@@ -53,36 +53,29 @@ const UserPage = () => {
       </div>
     </div>
   );
-  if (!user || !localStorage.jwtToken) return <Redirect to="/user/signin" />;
+  if (!user && !localStorage.jwtToken) return <Redirect to="/user/signin" />;
   if (state.user[0]) console.log("user in user page", state.user[0].user);
   return (
     <div className="page-wrapper ">
       <div className="col-lg-8 col-md-12 col-sm-12 userPanel">
-        <h3>Profile Page</h3>
         {state.user[0] ? (
           <div>
-            <p>
-              <strong>Username</strong> {state.user[0].user.username} <br />
-              <strong>Email</strong> {state.user[0].user.email}
-            </p>
-            <div>
-              <Link to="/" className="btn btn-danger btn-sm">
-                Edit Proile
-              </Link>
-              <Link to="/" className="btn btn-danger btn-sm">
-                Change Password
-              </Link>
-              <br />
-              <button
-                className="btn btn-default btn-sm"
-                style={{ marginTop: "20px", color: "red" }}
-                onClick={() => onLogout()}
-              >
-                Logout
-              </button>
-            </div>
-            <hr />
+            <div className="recipeWrapper">
+              <h5>Your Saved Recipes</h5>
 
+              <div>
+                {state.user[0].user.favorites &&
+                state.user[0].user.favorites.length > 0 ? (
+                  <div className="row">
+                    {state.user[0].user.favorites.map((f) => (
+                      <RecipeItem key={f.label + " " + f.source} recipe={f} />
+                    ))}
+                  </div>
+                ) : (
+                  <p>No saved recipes</p>
+                )}
+              </div>
+            </div>
             <div>
               {/* <Link to="/" className="btn btn-danger bt-sm">
                   Cancel
@@ -97,4 +90,4 @@ const UserPage = () => {
   );
 };
 
-export default UserPage;
+export default FavoritesPage;

@@ -9,7 +9,6 @@ router.post("/", (req, res) => {
         errors: { form: "Login failed, email not found" },
       });
     user.comparePassword(password, (err, isMatch) => {
-      console.log(err, isMatch);
       if (err)
         return res.status(402).json({
           errors: { form: err },
@@ -18,10 +17,7 @@ router.post("/", (req, res) => {
         return res.status(403).json({
           errors: { form: "Login failed, Wrong password" },
         });
-      console.log(user);
-      // res.status(200).json({
-      //   token: tokenForUser(user)
-      // });
+
       user.generateToken((err, user) => {
         if (err) {
           return res.status(404).json({ error: err });
@@ -41,7 +37,7 @@ router.post("/", (req, res) => {
           username: user.username,
           favorites: user.favorites,
         };
-        console.log("currentUser", currentUser);
+
         res.status(200).json({ user: currentUser, token: user.token });
       });
     });

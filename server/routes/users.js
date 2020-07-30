@@ -21,11 +21,11 @@ router.post("/id", (req, res) => {
       res.status(200).json({ user: currentUser });
     });
   } else {
+    console.log("Error in fetching user");
     return res.status(301).json({ errors: { form: "zUser is undefined" } });
   }
 });
 router.post("/", (req, res) => {
-  console.log(req.body);
   const { email, password, username } = req.body;
   let user = new User({
     email: email,

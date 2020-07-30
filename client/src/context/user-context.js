@@ -1,7 +1,7 @@
 import React, { useReducer, createContext } from "react";
 import isEmpty from "lodash/isEmpty";
 
-export const UserContext = createContext();
+export const UserContext = createContext(null);
 
 const initialState = {
   users: [],
@@ -10,6 +10,7 @@ const initialState = {
 };
 
 function reducer(state, action) {
+  console.log(action.type);
   switch (action.type) {
     case "LOGIN_USER": {
       return {
