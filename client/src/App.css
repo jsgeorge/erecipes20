@@ -19,25 +19,32 @@ body {
 .margin-top {
   margin-top: 0px;
 }
+.header {
+  background: #fff;
+  height: 80px;
+}
 .navbar-header {
-  width: 300px;
   margin: 0;
   padding: 0;
+  margin-top: 10px;
+  font-size: 28px;
 }
-.navbar-header a {
-  font-size: 24px;
+.navbar-header a,
+.navbar-header a:hover,
+.navbar-header a:visited {
+  color: red;
   font-weight: bold;
 }
 .navbar-right {
-  margin-top: 0px;
-  width: 350px;
+  margin-top: 20px;
+  width: 300px;
 }
 .navbar-right a {
   margin-right: 20px;
   margin-top: 0px;
   float: left;
   width: 100px;
-  margin-right: 20px;
+  margin-right: 0;
   color: #333;
 }
 .navbar-right a:last-child {
@@ -51,7 +58,7 @@ a:hover {
   text-decoration: none;
 }
 .page-wrapper {
-  padding-top: 75px;
+  padding-top: 0px;
   padding-bottom: 25px;
 }
 .form {
@@ -83,8 +90,9 @@ a:hover {
   float: left;
   margin-bottom: 20px;
 }
+
 .card-title {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bold;
 }
 .recipeWrapper h4 {
@@ -98,38 +106,77 @@ a:hover {
 .recipeWrapper h4 a:hover {
   text-decoration: none;
 }
+.category-mnu-wrapper {
+  padding: 0 15px;
+}
 .selCategory {
   margin-bottom: 0px;
-  padding: 0;
+  padding: 3px;
+  height: 10%;
 }
 .categoryCaption {
   position: absolute;
-  top: 80%;
-
+  bottom: 0;
   left: 0;
   z-index: 99;
-  color: #111;
   cursor: pointer;
-  background: transparent;
+  background: #eee;
   padding: 0;
   width: 100%;
+  height: 20px;
 }
 .categoryCaption h3 {
   text-align: center;
-  color: #fff;
+  color: #111;
+  padding: 0;
+  margin: 0;
   font-size: 14px;
   font-weight: bold;
   cursor: pointer;
   font-weight: bold;
-  background: rgba(0, 0, 0, 0.2);
+  /* background: rgba(0, 0, 0, 0.2); */
+}
+.srch-form {
+  width: 50%;
+  padding: 2px;
+  height: 40px;
+  margin-bottom: 14px;
+}
+.srch-form input {
+  width: 90%;
+  float: left;
+  color: #111;
+  border: none;
+  background: #ccc;
+}
+.srch-form button {
+  border: none;
+  height: 33px;
+  width: 32px;
+  border-top: 1px solid #aaa;
+  border-right: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
+  margin-left: -1px;
 }
 .imgCategory img {
   height: 140px;
   cursor: pointer;
 }
+.recipeItem {
+  padding-bottom: 12px;
+  margin-bottom: 10px;
+}
 .recipeItem .card-body h6 {
   margin-bottom: 0px;
   padding-bottom: 0px;
+}
+.recipeItem .card {
+  background: #fff;
+  height: 100%;
+  padding-bottom: 10px;
+}
+.ctgry-card {
+  padding-bottom: 0;
 }
 .recipeDetail {
   background: #fff;
@@ -138,6 +185,9 @@ a:hover {
 .has-error {
   color: red;
 }
+.user-favs {
+  margin-top: 10px;
+}
 footer {
   text-align: center;
   background: #fff;
@@ -145,22 +195,23 @@ footer {
   padding-top: 20px;
   padding-bottom: 20%;
 }
-.card-title {
-  font-size: 18px;
+
+.whiteBkd {
+  background: #fff;
 }
 
 .recipeHeader {
   width: 100%;
-  padding: 5px 10px;
+  padding: 20px;
   color: #111;
-  min-height: 40px;
+  min-height: 20px;
 
   display: block;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 .recipeHeader a {
   color: #111;
-  font-size: 18px;
+  font-size: 15px;
 }
 /* @media (max-width: 500px) {
   .recipeItem {
@@ -172,6 +223,10 @@ i {
 }
 .recipeWrapper h5 {
   margin-bottom: 25px;
+}
+.card-img-top {
+  margin-bottom: 0px;
+  width: 100%;
 }
 a {
   margin-right: 5px;
@@ -193,6 +248,30 @@ a {
 .mobile {
   display: none;
 }
+@media (min-width: 993px) and (max-width: 1198px) {
+  .container {
+  }
+  .desktop {
+    display: block;
+  }
+  .mobile {
+    display: none;
+  }
+  .selCategory {
+    margin-bottom: 0px;
+
+    /* height: 150px; */
+  }
+  .categoryCaption {
+    /* top: 75%; */
+    width: 100%;
+  }
+  .categoryCaption h3 {
+    font-size: 15px;
+    font-weight: bold;
+    /* background: rgba(0, 0, 0, 0.4); */
+  }
+}
 @media (min-width: 771px) and (max-width: 992px) {
   .container {
     max-width: 900px;
@@ -203,24 +282,44 @@ a {
   .mobile {
     display: none;
   }
+  .selCategory {
+    margin-bottom: 0px;
+  }
   .categoryCaption {
-    top: 85%;
+    /* top: 65%; */
     width: 100%;
   }
   .categoryCaption h3 {
     font-size: 12px;
     font-weight: bold;
-    background: rgba(0, 0, 0, 0.4);
+    /* background: rgba(0, 0, 0, 0.4); */
   }
 }
 @media (min-width: 572px) and (max-width: 770px) {
+  .header {
+    height: 60px;
+  }
   .container {
     max-width: 700px;
   }
-  .navbar-right {
-  }
   .navbar-header {
-    width: 200px;
+    width: 20%;
+    float: left;
+    padding-left: 15px;
+  }
+  .navbar-right {
+    clear: none;
+    float: right;
+  }
+  .navbar-right a {
+    padding: 0;
+    margin: 0;
+  }
+  .srch-form {
+    width: 90%;
+    padding: 2px;
+    height: 40px;
+    margin-bottom: 14px;
   }
   .row {
     margin: 0;
@@ -230,17 +329,17 @@ a {
     padding: 0;
   }
   .selCategory {
-    width: 33%;
+    /* height: 6%; */
   }
   .categoryCaption {
-    top: 85%;
+    /* top: 60%; */
     width: 100%;
   }
   .categoryCaption h3 {
     font-size: 14px;
     font-weight: bold;
-
-    background: rgba(0, 0, 0, 0.4);
+    /* 
+    background: rgba(0, 0, 0, 0.4); */
   }
 
   .recipeItem {
@@ -254,15 +353,26 @@ a {
   }
 }
 @media (max-width: 570px) {
+  .header {
+    height: 50px;
+  }
   .desktop {
     display: none;
   }
   .mobile {
     display: block;
   }
+  .srch-form {
+    width: 100%;
+    padding: 2px;
+    height: 40px;
+    margin-bottom: 14px;
+  }
   .navbar-header {
     width: 90px;
     font-size: 15px;
+    float: left;
+    padding-left: 15px;
   }
   .navbar-header a {
     font-size: 18px;
@@ -270,15 +380,15 @@ a {
   }
   .navbar-right {
     width: 200px;
+    float: right;
   }
   .navbar-right a {
-    width: 40px;
+    width: 50px;
     margin-right: 10%;
   }
 
   .recipeHeader {
-    padding: 0;
-    height: 20px;
+    height: 30px;
   }
   .recipeHeader h4 {
     padding-bottom: 5px;
@@ -287,9 +397,8 @@ a {
   .recipeItem {
     width: 50%;
     font-size: 16px;
-    padding: 7px;
   }
-  .recipeItem card-img-top {
+  .recipeItem .card-img-top {
     margin-bottom: 0px;
   }
   .recipeItem .card-body {
@@ -305,16 +414,20 @@ a {
   .recipeDetail {
     padding: 20px 3px;
   }
+  .category-mnu-wrapper {
+    padding: 0;
+  }
   .CategoryLinks {
   }
   .row {
     margin: 0;
   }
   .selCategory {
-    width: 33%;
+    width: 25%;
     font-size: 16px;
-    padding: 5px;
-    margin-bottom: 0px;
+    /* padding: 5px;
+    height: 5%;
+    margin-bottom: 0px; */
   }
   .imgCategory {
     padding: 0;
@@ -327,18 +440,20 @@ a {
   .categoryCaption {
     font-size: 14px;
     padding: 0;
-    top: 82%;
+    /* top: 60%; */
     font-weight: bold;
   }
   .categoryCaption h3 {
-    font-size: 16px;
+    font-size: 12px;
     font-weight: bold;
-    background: rgba(0, 0, 0, 0.4);
+    /* padding: 2px 0;
+    background: rgba(0, 0, 0, 0.8); */
+    /* width: 97%; */
   }
   .card-title {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
-    line-height: 0.9em;
+    line-height: 1em;
   }
   .detailHeader h3 {
     padding-top: 10px;

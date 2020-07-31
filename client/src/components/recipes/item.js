@@ -193,6 +193,7 @@ const RecipeItem = ({ category, recipe }) => {
               )}
             </div>
           </div>
+          <div className="row" />
         </div>
       </div>
     );

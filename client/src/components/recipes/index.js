@@ -68,29 +68,29 @@ const RecipesPage = ({ match }) => {
     if (qry) {
       try {
         setLoading(true);
-        // const request = await fetch(
-        //   `https://api.edamam.com/search?q=${qry}&app_id=${EDAMAM_APPID}&app_key=${EDAMAM_APPKEY}` //&from=0&to=20`
-        // );
+        const request = await fetch(
+          `https://api.edamam.com/search?q=${qry}&app_id=${EDAMAM_APPID}&app_key=${EDAMAM_APPKEY}` //&from=0&to=20`
+        );
         // const request = await fetch(
         //   "https://jsonplaceholder.typicode.com/posts"
         // );
         // const request = await fetch(
         //   "movie-database-imdb-alternative.p.rapidapi.com?page=1&r=json&s=Avengers%20Endgame&x-rapidapi-key=95bcab4269msh504eb8fe30a7d34p16db21jsne501ac022ca9"
         // );
-        // const data = await request.json();
-        // if (!data) {
-        //   setLoading(false);
-        //   setApiError("ERROR - could not retrieve data");
-        // } else {
-        //   setLoading(false);
-        //   setShowRecipes(true);
-        //   setRecipes(data.hits);
-        // }
-        setLoading(false);
-        setShowRecipes(true);
+        const data = await request.json();
+        if (!data) {
+          setLoading(false);
+          setApiError("ERROR - could not retrieve data");
+        } else {
+          setLoading(false);
+          setShowRecipes(true);
+          setRecipes(data.hits);
+        }
+        // setLoading(false);
+        // setShowRecipes(true);
 
         //setRecipes(hits);
-        setRecipes(sdata);
+        //setRecipes(sdata);
       } catch (err) {
         setLoading(false);
         setApiError(
@@ -174,28 +174,24 @@ const RecipesPage = ({ match }) => {
     <div className="page-wrapper">
       {loading ? <Spinner animation="border" role="status"></Spinner> : null}
       {errors ? <div className="has-error">{errors}</div> : null}
-
-      <div className="input-group md-form form-sm form-2 pl-0 form">
-        <input
-          className="form-control my-0 py-1 red-border"
-          type="text"
-          placeholder="Search recipes"
-          aria-label="Search"
-          onChange={onChange}
-          onKeyPress={onSearchEnter}
-        />
-        <div className="input-group-append">
+      <div className="srch-form">
+        <div className="form-group">
+          <input
+            className="form-control"
+            type="text"
+            placeholder="Search recipes"
+            aria-label="Search"
+            onChange={onChange}
+            onKeyPress={onSearchEnter}
+          />
           <button
             onClick={() => onSearch()}
-            className="input-group-text red lighten-3 srchBtn"
+            className=" srchBtn"
             id="basic-text1"
           >
             <FontAwesomeIcon icon={faSearch} />
-
-            {/* <i className="fa fa-search text-grey" aria-hidden="true"></i> */}
           </button>
         </div>
-        <br />
       </div>
       {/* <p>
         srchTerm:{srchTerm} showRecipes:{showRecipes} errors:{errors}

@@ -34,7 +34,7 @@ const Header = () => {
   };
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+      <nav className="navbar navbar-expand-lg navbar-light bg-white fixed-top header">
         <div className="container">
           <div className="navbar-header">
             <Link className="primary-clr" to="/">
@@ -89,11 +89,12 @@ const Header = () => {
                     size="lg"
                     style={{
                       color: "#777",
-                      borderRadius: "120px",
+                      borderRadius: "150px",
                       border: "2px solid #777",
                       padding: "Spx",
                       float: "left",
                       marginRight: "5px",
+                      width: "20px",
                     }}
                   />{" "}
                   <span className="desktop">
