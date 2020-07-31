@@ -8,6 +8,7 @@ const users = require("./routes/users");
 const auth = require("./routes/auth");
 
 const app = express();
+
 require("dotenv").config();
 
 //mongo DB
@@ -16,6 +17,7 @@ mongoose.connect(
 );
 
 app.use(bodyParser.json());
+app.use(express.static("client/build"));
 
 //Routes middleware
 app.use("/users", users);
