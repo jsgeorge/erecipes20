@@ -13,12 +13,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CategoryList from "../categories";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 
-const RecipesPage = ({ match }) => {
+const CategoryRecipesPage = ({ match }) => {
   const [loading, setLoading] = useState(false);
   const [state, dispatch] = useContext(UserContext);
   const [recipes, setRecipes] = useState([]);
-  const [featured, setFeatured] = useState([]);
-  const [showFeatured, setShowFeatured] = useState([true]);
   const [header, setHeader] = useState("");
   const [srchTerm, setSrchTerm] = useState("");
   const [showCategories, setShowCategories] = useState(true);
@@ -40,20 +38,11 @@ const RecipesPage = ({ match }) => {
     //getRecipes("Beef");
     if (!state.user[0] && localStorage.jwtToken) {
       setAuthUser(jwtDecode(localStorage.jwtToken));
-    } else if (match.params.category) setShowRecipes(true);
-    setFeatured(sdata);
-
-    if (match.params.c) {
-      setShowFeatured(false);
-      console.log(match.params.c);
-      setCategory(match.params.c);
-      setHeader(match.params.c);
-      getRecipes(match.params.c);
-    } else {
-      setShowFeatured(true);
-      setSrchTerm("");
-      setShowRecipes(false);
     }
+    console.log(match.params.c);
+    setCategory(match.params.c);
+    setHeader(match.params.c);
+    getRecipes(match.params.c);
   }, []);
 
   const getRecipes = async (ctgry) => {
@@ -88,7 +77,6 @@ const RecipesPage = ({ match }) => {
         // }
         setLoading(false);
         setShowRecipes(true);
-
         //setRecipes(hits);
         setRecipes(sdata);
       } catch (err) {
@@ -152,24 +140,6 @@ const RecipesPage = ({ match }) => {
     setShowRecipes(false);
   };
 
-  const displayFeatured = () => {
-    return (
-      <div>
-        <h3>Today's Featured</h3>
-        {featured && featured.length > 0 ? (
-          <div className="row">
-            {featured.map((recipe) => (
-              <RecipeItem
-                category={category}
-                key={recipe.recipe.label + " " + recipe.recipe.source}
-                recipe={recipe.recipe}
-              />
-            ))}
-          </div>
-        ) : null}
-      </div>
-    );
-  };
   return (
     <div className="page-wrapper">
       {loading ? <Spinner animation="border" role="status"></Spinner> : null}
@@ -201,12 +171,11 @@ const RecipesPage = ({ match }) => {
         srchTerm:{srchTerm} showRecipes:{showRecipes} errors:{errors}
       </p> */}
       <div className="CategoryLinks desktop">
-        <CategoryList type="home" />
+        <CategoryList type="page" />
       </div>
-      <div className="CategoryLinks mobile">
-        {showCategories ? <CategoryList type="home" /> : null}
-      </div>
-      {showFeatured ? <span>{displayFeatured()} </span> : null}
+      {/* <div className="CategoryLinks mobile">
+        {showCategories ? <CategoryList /> : null}
+      </div> */}
       {showRecipes ? (
         <div className="recipeWrapper">
           <div className="recipeHeader">
@@ -242,4 +211,4 @@ const RecipesPage = ({ match }) => {
   );
 };
 
-export default RecipesPage;
+export default CategoryRecipesPage;

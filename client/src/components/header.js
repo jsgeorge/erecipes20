@@ -44,10 +44,9 @@ const Header = () => {
           <div className="navbar-right">
             <Link to="/">
               <FontAwesomeIcon
-                style={{ float: "left" }}
+                style={{ float: "left", marginRight: "5px" }}
                 icon={faHome}
-                size="med"
-                marginRight="5px"
+                size="1x"
                 className="primary-btn-clr mobile"
               />
               <span className="desktop primary-btn-clr">Home</span>
@@ -74,7 +73,7 @@ const Header = () => {
                 <Link to="/user/favorites">
                   <FontAwesomeIcon
                     icon={faStar}
-                    size="med"
+                    size="1x"
                     className="mobile primary-btn-clr"
                     style={{
                       borderRadius: "120px",

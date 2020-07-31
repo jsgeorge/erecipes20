@@ -103,7 +103,7 @@ const RecipeItem = ({ category, recipe }) => {
     else queryStr = `/recipes/${label}/${source}`;
     //const srchItem = "c=" + category + "l=" + label + "s=" + source;
     return (
-      <div className=" col-md-4 col-sm-4 col-xs-4 recipeItem">
+      <div className=" col-lg-3 col-md-4 col-sm-4 col-xs-4 recipeItem">
         <div className="card mb-3 box-shadow">
           <Link to={queryStr}>
             <img src={image} alt="img" className="card-img-top" />

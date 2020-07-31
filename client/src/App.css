@@ -100,10 +100,11 @@ a:hover {
 }
 .selCategory {
   margin-bottom: 0px;
+  padding: 0;
 }
 .categoryCaption {
   position: absolute;
-  top: 86%;
+  top: 80%;
 
   left: 0;
   z-index: 99;
@@ -116,7 +117,7 @@ a:hover {
 .categoryCaption h3 {
   text-align: center;
   color: #fff;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: bold;
   cursor: pointer;
   font-weight: bold;
@@ -207,7 +208,7 @@ a {
     width: 100%;
   }
   .categoryCaption h3 {
-    font-size: 19px;
+    font-size: 12px;
     font-weight: bold;
     background: rgba(0, 0, 0, 0.4);
   }
